@@ -64,7 +64,7 @@
 			"response": []
 		},
 		{
-			"name": "API status Copy",
+			"name": "API statusCopy",
 			"request": {
 				"method": "GET",
 				"header": [],
