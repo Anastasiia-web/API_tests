@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "API name",
+			"name": "API_name",
 			"event": [
 				{
 					"listen": "test",
