@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "60dd871b-d048-4beb-a74c-6b834bf8b921",
+		"_postman_id": "4896e10b-13bc-4b2b-a718-921f7c05b41e",
 		"name": "GroceryStore_API Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "9519316"
@@ -64,7 +64,7 @@
 			"response": []
 		},
 		{
-			"name": "API statusCopy",
+			"name": "API_StatusCopy",
 			"request": {
 				"method": "GET",
 				"header": [],
