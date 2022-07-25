@@ -1,0 +1,1172 @@
+{
+	"info": {
+		"_postman_id": "d3088262-7c32-479c-8386-4893b7478f1a",
+		"name": "OBJECTs Trello Automation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9519316"
+	},
+	"item": [
+		{
+			"name": "Array_Stableposition New board creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// pm.test(\"Status code is 200\", function () {\r",
+							"//     pm.response.to.have.status(200);\r",
+							"// });\r",
+							"// const jsonData = pm.response.json();\r",
+							"// pm.test(\"Board should be created\", function () {\r",
+							"//     pm.expect(jsonData.name).to.eql(pm.environment.get(\"boardName\"));\r",
+							"//     pm.expect(jsonData.closed).to.eql(false);\r",
+							"// });\r",
+							"// pm.test(\"Board should be private\", function () {\r",
+							"//     pm.expect(jsonData.prefs.permissionLevel).to.eql(\"private\");\r",
+							"// });\r",
+							"// pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							"// OBJECTS\r",
+							"let jsonData = pm.response.json();\r",
+							"// console.log(jsonData.prefs.switcherViews[2]); // object 2 in array\r",
+							"let Calendar = jsonData.prefs.switcherViews[2] // declare as variable an object 2 in array for the test\r",
+							"\r",
+							"console.log(Calendar);\r",
+							"console.log(typeof Calendar);  // to be sure that it's an object \r",
+							"\r",
+							"pm.test(\"Calendar is not displayed\", function() {\r",
+							"    pm.expect(Calendar.viewType).to.be.eql(\"Calendar\");\r",
+							"    pm.expect(Calendar.enabled).to.be.false;\r",
+							"}) \r",
+							"pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"boardName\", getRandomBoardName());\r",
+							"\r",
+							"function getRandomBoardName() {\r",
+							"    const boardName = \"My board name \" + parseInt(Math.random() * 10000);\r",
+							"    return boardName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards?key={{trello_key}}&token={{trello_token}}&name={{boardName}}&defaultLists=false",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{boardName}}"
+						},
+						{
+							"key": "defaultLists",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_Iteration New board creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// pm.test(\"Status code is 200\", function () {\r",
+							"//     pm.response.to.have.status(200);\r",
+							"// });\r",
+							"// const jsonData = pm.response.json();\r",
+							"// pm.test(\"Board should be created\", function () {\r",
+							"//     pm.expect(jsonData.name).to.eql(pm.environment.get(\"boardName\"));\r",
+							"//     pm.expect(jsonData.closed).to.eql(false);\r",
+							"// });\r",
+							"// pm.test(\"Board should be private\", function () {\r",
+							"//     pm.expect(jsonData.prefs.permissionLevel).to.eql(\"private\");\r",
+							"// });\r",
+							"// pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							"// OBJECTS\r",
+							"// 1 STABLE in Array\r",
+							"let jsonData = pm.response.json();\r",
+							"// // console.log(jsonData.prefs.switcherViews[2]); // object 2 in array\r",
+							"// let Calendar = jsonData.prefs.switcherViews[2] // declare as variable an object 2 in array for the test\r",
+							"// console.log(Calendar);\r",
+							"// pm.test(\"Calendar is not displayed\", function() {\r",
+							"//     pm.expect(Calendar.viewType).to.be.eql(\"Calendar\");\r",
+							"//     pm.expect(Calendar.enabled).to.be.false;\r",
+							"// }) \r",
+							"// 2 ITERATION through Array is BETTER, only if the specific condition is met, will work with the object\r",
+							"let Calendar;\r",
+							"for (let switcherViews of jsonData.prefs.switcherViews) {\r",
+							"    // console.log(switcherViews) // displays all array objects\r",
+							"    if (switcherViews.viewType == \"Calendar\") {\r",
+							"      //  console.log(switcherViews)    // displays only 1 object from the array\r",
+							"        Calendar = switcherViews\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"Calendar is not displayed\", function() {\r",
+							"    pm.expect(Calendar.enabled).to.be.false;\r",
+							"}) \r",
+							"\r",
+							"console.log(typeof Calendar);  // to be sure that it's an object  \r",
+							"\r",
+							"pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"boardName\", getRandomBoardName());\r",
+							"\r",
+							"function getRandomBoardName() {\r",
+							"    const boardName = \"My board name \" + parseInt(Math.random() * 10000);\r",
+							"    return boardName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards?key={{trello_key}}&token={{trello_token}}&name={{boardName}}&defaultLists=false",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{boardName}}"
+						},
+						{
+							"key": "defaultLists",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_Iteration_2 New board creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// pm.test(\"Status code is 200\", function () {\r",
+							"//     pm.response.to.have.status(200);\r",
+							"// });\r",
+							"// const jsonData = pm.response.json();\r",
+							"// pm.test(\"Board should be created\", function () {\r",
+							"//     pm.expect(jsonData.name).to.eql(pm.environment.get(\"boardName\"));\r",
+							"//     pm.expect(jsonData.closed).to.eql(false);\r",
+							"// });\r",
+							"// pm.test(\"Board should be private\", function () {\r",
+							"//     pm.expect(jsonData.prefs.permissionLevel).to.eql(\"private\");\r",
+							"// });\r",
+							"// pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							"// OBJECTS\r",
+							"// 1 STABLE in Array\r",
+							"let jsonData = pm.response.json();\r",
+							"// // console.log(jsonData.prefs.switcherViews[2]); // object 2 in array\r",
+							"// let Calendar = jsonData.prefs.switcherViews[2] // declare as variable an object 2 in array for the test\r",
+							"// console.log(Calendar);\r",
+							"// pm.test(\"Calendar is not displayed\", function() {\r",
+							"//     pm.expect(Calendar.viewType).to.be.eql(\"Calendar\");\r",
+							"//     pm.expect(Calendar.enabled).to.be.false;\r",
+							"// }) \r",
+							"// 2 ITERATION through Array is BETTER, only if the specific condition is met, will work with the object\r",
+							"let Calendar;\r",
+							"for (let switcherViews of jsonData.prefs.switcherViews) {\r",
+							"    // console.log(switcherViews) // displays all array objects\r",
+							"    if (switcherViews.viewType == \"Calendar\") {\r",
+							"      //  console.log(switcherViews)    // displays only 1 object from the array\r",
+							"        Calendar = switcherViews\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"Calendar is not displayed\", function() {\r",
+							"    pm.expect(Calendar.enabled).to.be.false;\r",
+							"}) \r",
+							"\r",
+							"console.log(typeof Calendar);  // to be sure that it's an object  \r",
+							"\r",
+							"pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"boardName\", getRandomBoardName());\r",
+							"\r",
+							"function getRandomBoardName() {\r",
+							"    const boardName = \"My board name \" + parseInt(Math.random() * 10000);\r",
+							"    return boardName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards?key={{trello_key}}&token={{trello_token}}&name={{boardName}}&defaultLists=false",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{boardName}}"
+						},
+						{
+							"key": "defaultLists",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_Iteration_NESTED Example Valentin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// READY TEST - Straitforward but the property is changing!!!\r",
+							"let jsonData = pm.response.json();\r",
+							"let Status = jsonData.limits[\"54bba24af6196bd5f824e563\"].boards.totalPerMember.status;\r",
+							"//console.log(Status);  // test if we have right path to the object\r",
+							"pm.test(\"Status is ok\"), function() {\r",
+							"    pm.expect(Status).to.be.eql(\"ok\");\r",
+							"}\r",
+							"// THE SAME via key Variblae - is better !!!\r",
+							"let boardCount;\r",
+							"for (let key in jsonData.limits) {\r",
+							"    console.log(key, jsonData.limits[key]);   // test the object\r",
+							"    console.log(jsonData.limits[key].hasOwnProperty(\"boards\"));   // test if the object is correct\r",
+							"    if (jsonData.limits[key].hasOwnProperty(\"boards\")) {\r",
+							"        boardCount = jsonData.limits[key].boards.totalPerMember.count;\r",
+							"    }\r",
+							"}\r",
+							"pm.test(\"Count is 1\", function(){\r",
+							"    pm.expect(boardCount).to.be.eql(1);\r",
+							"})\r",
+							"\r",
+							"//== Second test: 2 options\r",
+							"let Voting = jsonData.prefs.voting;  // via variable\r",
+							"pm.test(\"Voting is disabled\", function() {\r",
+							"    pm.expect(Voting).to.be.eql(\"disabled\");\r",
+							"}) \r",
+							"// Strait forward approach the same test:\r",
+							"// pm.test(\"Voting is disabled\", function() {\r",
+							"//     pm.expect(jsonData.prefs.voting).to.be.eql(\"disabled\");\r",
+							"// }) \r",
+							"\r",
+							"// ===\r",
+							"// // pm.test(\"Status code is 200\", function () {\r",
+							"// //     pm.response.to.have.status(200);\r",
+							"// // });\r",
+							"// // const jsonData = pm.response.json();\r",
+							"// // pm.test(\"Board should be created\", function () {\r",
+							"// //     pm.expect(jsonData.name).to.eql(pm.environment.get(\"boardName\"));\r",
+							"// //     pm.expect(jsonData.closed).to.eql(false);\r",
+							"// // });\r",
+							"// // pm.test(\"Board should be private\", function () {\r",
+							"// //     pm.expect(jsonData.prefs.permissionLevel).to.eql(\"private\");\r",
+							"// // });\r",
+							"// // pm.environment.set(\"boardId\", jsonData.id);\r",
+							"\r",
+							"// // OBJECTS\r",
+							"// // 1 STABLE in Array\r",
+							"// // let jsonData = pm.response.json();\r",
+							"// // // console.log(jsonData.prefs.switcherViews[2]); // object 2 in array\r",
+							"// // let Calendar = jsonData.prefs.switcherViews[2] // declare as variable an object 2 in array for the test\r",
+							"// // console.log(Calendar);\r",
+							"// // pm.test(\"Calendar is not displayed\", function() {\r",
+							"// //     pm.expect(Calendar.viewType).to.be.eql(\"Calendar\");\r",
+							"// //     pm.expect(Calendar.enabled).to.be.false;\r",
+							"// // }) \r",
+							"// // 2 ITERATION through Array is BETTER, only if the specific condition is met, will work with the object\r",
+							"// let Calendar;\r",
+							"// for (let switcherViews of jsonData.prefs.switcherViews) {\r",
+							"//     // console.log(switcherViews) // displays all array objects\r",
+							"//     if (switcherViews.viewType == \"Calendar\") {\r",
+							"//       //  console.log(switcherViews)    // displays only 1 object from the array\r",
+							"//         Calendar = switcherViews\r",
+							"//     }\r",
+							"// }\r",
+							"// pm.test(\"Calendar is not displayed\", function() {\r",
+							"//     pm.expect(Calendar.enabled).to.be.false;\r",
+							"// }) \r",
+							"\r",
+							"// console.log(typeof Calendar);  // to be sure that it's an object  \r",
+							"\r",
+							"// pm.environment.set(\"boardId\", jsonData.id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5ab34d8c2f00006600ca3652",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5ab34d8c2f00006600ca3652"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_Iteration_NESTED_2 Example Valentin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(typeof jsonData.prefs.comments.status); // string\r",
+							"pm.test(\"Testing data is ok\", () => {\r",
+							"    pm.expect(jsonData.name).to.eql(\"My board 7\");\r",
+							"    pm.expect(jsonData.prefs.permissionLevel).to.eql(\"private\");\r",
+							"    pm.expect(jsonData.prefs.comments.count).to.eql(0);\r",
+							"})\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// // READY TEST - Straitforward but the property is changing!!!\r",
+							"// let jsonData = pm.response.json();\r",
+							"// let Status = jsonData.limits[\"54bba24af6196bd5f824e563\"].boards.totalPerMember.status;\r",
+							"// //console.log(Status);  // test if we have right path to the object\r",
+							"// pm.test(\"Status is ok\"), function() {\r",
+							"//     pm.expect(Status).to.be.eql(\"ok\");\r",
+							"// }\r",
+							"// // THE SAME via key Variblae - is better !!!\r",
+							"// let boardCount;\r",
+							"// for (let key in jsonData.limits) {\r",
+							"//     console.log(key, jsonData.limits[key]);   // test the object\r",
+							"//     console.log(jsonData.limits[key].hasOwnProperty(\"boards\"));   // test if the object is correct\r",
+							"//     if (jsonData.limits[key].hasOwnProperty(\"boards\")) {\r",
+							"//         boardCount = jsonData.limits[key].boards.totalPerMember.count;\r",
+							"//     }\r",
+							"// }\r",
+							"// pm.test(\"Count is 1\", function(){\r",
+							"//     pm.expect(boardCount).to.be.eql(1);\r",
+							"// })\r",
+							"\r",
+							"// //== Second test: 2 options\r",
+							"// let Voting = jsonData.prefs.voting;  // via variable\r",
+							"// pm.test(\"Voting is disabled\", function() {\r",
+							"//     pm.expect(Voting).to.be.eql(\"disabled\");\r",
+							"// }) \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5ab34d8c2f00006600ca3652",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5ab34d8c2f00006600ca3652"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_1Iteration_NESTED_Youtube Example Valentin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(typeof jsonData)  // object\r",
+							"console.log(typeof jsonData.other[\"social-media\"]); // object\r",
+							"console.log(jsonData.other[\"social-media\"][1]); // \"Instagram\"\r",
+							"\r",
+							"pm.test(\"Testing data is ok\", () => {\r",
+							"    pm.expect(jsonData.name).to.eql(\"Jane\");\r",
+							"    pm.expect(jsonData.age).to.eql(29);\r",
+							"    pm.expect(jsonData.other.email).to.eql(\"jane@example.com\");\r",
+							"    pm.expect(jsonData.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"})\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// // READY TEST - Straitforward but the property is changing!!!\r",
+							"// let jsonData = pm.response.json();\r",
+							"// let Status = jsonData.limits[\"54bba24af6196bd5f824e563\"].boards.totalPerMember.status;\r",
+							"// //console.log(Status);  // test if we have right path to the object\r",
+							"// pm.test(\"Status is ok\"), function() {\r",
+							"//     pm.expect(Status).to.be.eql(\"ok\");\r",
+							"// }\r",
+							"// // THE SAME via key Variblae - is better !!!\r",
+							"// let boardCount;\r",
+							"// for (let key in jsonData.limits) {\r",
+							"//     console.log(key, jsonData.limits[key]);   // test the object\r",
+							"//     console.log(jsonData.limits[key].hasOwnProperty(\"boards\"));   // test if the object is correct\r",
+							"//     if (jsonData.limits[key].hasOwnProperty(\"boards\")) {\r",
+							"//         boardCount = jsonData.limits[key].boards.totalPerMember.count;\r",
+							"//     }\r",
+							"// }\r",
+							"// pm.test(\"Count is 1\", function(){\r",
+							"//     pm.expect(boardCount).to.be.eql(1);\r",
+							"// })\r",
+							"\r",
+							"// //== Second test: 2 options\r",
+							"// let Voting = jsonData.prefs.voting;  // via variable\r",
+							"// pm.test(\"Voting is disabled\", function() {\r",
+							"//     pm.expect(Voting).to.be.eql(\"disabled\");\r",
+							"// }) \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://run.mocky.io/v3/25e2d802-a744-470d-8c60-6acb338407e9",
+					"protocol": "https",
+					"host": [
+						"run",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v3",
+						"25e2d802-a744-470d-8c60-6acb338407e9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_2Iteration_NESTED_Youtube Example Valentin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"console.log(typeof jsonData)  // object\r",
+							"\r",
+							"let person = jsonData[0];   // as the response is ARRAY in [] which contains an Object!!!\r",
+							"console.log(person)\r",
+							"\r",
+							"pm.test(\"Testing data is ok\", () => {\r",
+							"    pm.expect(person.name).to.eql(\"Jane\");    // person instead of jsonData !!!\r",
+							"    pm.expect(person.age).to.eql(29);\r",
+							"    pm.expect(person.other.email).to.eql(\"jane@example.com\");\r",
+							"    pm.expect(person.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"})\r",
+							"\r",
+							"//==\r",
+							"// const jsonData = pm.response.json();\r",
+							"\r",
+							"// console.log(typeof jsonData.other[\"social-media\"]); // object\r",
+							"// console.log(jsonData.other[\"social-media\"][1]); // \"Instagram\"\r",
+							"\r",
+							"// pm.test(\"Testing data is ok\", () => {\r",
+							"//     pm.expect(jsonData.name).to.eql(\"Jane\");\r",
+							"//     pm.expect(jsonData.age).to.eql(29);\r",
+							"//     pm.expect(jsonData.other.email).to.eql(\"jane@example.com\");\r",
+							"//     pm.expect(jsonData.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"// })\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// // READY TEST - Straitforward but the property is changing!!!\r",
+							"// let jsonData = pm.response.json();\r",
+							"// let Status = jsonData.limits[\"54bba24af6196bd5f824e563\"].boards.totalPerMember.status;\r",
+							"// //console.log(Status);  // test if we have right path to the object\r",
+							"// pm.test(\"Status is ok\"), function() {\r",
+							"//     pm.expect(Status).to.be.eql(\"ok\");\r",
+							"// }\r",
+							"// // THE SAME via key Variblae - is better !!!\r",
+							"// let boardCount;\r",
+							"// for (let key in jsonData.limits) {\r",
+							"//     console.log(key, jsonData.limits[key]);   // test the object\r",
+							"//     console.log(jsonData.limits[key].hasOwnProperty(\"boards\"));   // test if the object is correct\r",
+							"//     if (jsonData.limits[key].hasOwnProperty(\"boards\")) {\r",
+							"//         boardCount = jsonData.limits[key].boards.totalPerMember.count;\r",
+							"//     }\r",
+							"// }\r",
+							"// pm.test(\"Count is 1\", function(){\r",
+							"//     pm.expect(boardCount).to.be.eql(1);\r",
+							"// })\r",
+							"\r",
+							"// //== Second test: 2 options\r",
+							"// let Voting = jsonData.prefs.voting;  // via variable\r",
+							"// pm.test(\"Voting is disabled\", function() {\r",
+							"//     pm.expect(Voting).to.be.eql(\"disabled\");\r",
+							"// }) \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://run.mocky.io/v3/76d67ddb-23dc-4947-b29f-6dcb83aa6a43",
+					"protocol": "https",
+					"host": [
+						"run",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v3",
+						"76d67ddb-23dc-4947-b29f-6dcb83aa6a43"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Array_3Iteration_NESTED_Youtube Example Valentin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 2 option via key variable is better !!!\r",
+							"const jsonData = pm.response.json();\r",
+							"let personJane = jsonData.find(item => item.name === \"Jane\");\r",
+							"console.log(personJane);\r",
+							"\r",
+							"pm.test(\"Testing data is ok\", () => {\r",
+							"    pm.expect(personJane.name).to.eql(\"Jane\");    // person instead of jsonData !!!\r",
+							"    pm.expect(personJane.age).to.eql(29);\r",
+							"    pm.expect(personJane.other.email).to.eql(\"jane@example.com\");\r",
+							"    pm.expect(personJane.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"})\r",
+							"// ==\r",
+							"// 1 option straitforward:\r",
+							"// const jsonData = pm.response.json();\r",
+							"\r",
+							"// console.log(typeof jsonData)  // object\r",
+							"\r",
+							"// let person = jsonData[1];   // as the response is ARRAY in [] which contains an Object!!!\r",
+							"// console.log(person)\r",
+							"\r",
+							"// pm.test(\"Testing data is ok\", () => {\r",
+							"//     pm.expect(person.name).to.eql(\"Jane\");    // person instead of jsonData !!!\r",
+							"//     pm.expect(person.age).to.eql(29);\r",
+							"//     pm.expect(person.other.email).to.eql(\"jane@example.com\");\r",
+							"//     pm.expect(person.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"// })\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"//==\r",
+							"// const jsonData = pm.response.json();\r",
+							"\r",
+							"// console.log(typeof jsonData.other[\"social-media\"]); // object\r",
+							"// console.log(jsonData.other[\"social-media\"][1]); // \"Instagram\"\r",
+							"\r",
+							"// pm.test(\"Testing data is ok\", () => {\r",
+							"//     pm.expect(jsonData.name).to.eql(\"Jane\");\r",
+							"//     pm.expect(jsonData.age).to.eql(29);\r",
+							"//     pm.expect(jsonData.other.email).to.eql(\"jane@example.com\");\r",
+							"//     pm.expect(jsonData.other[\"social-media\"]).to.include(\"Instagram\"); // Array has \"Instagram\"\r",
+							"// })\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"// // READY TEST - Straitforward but the property is changing!!!\r",
+							"// let jsonData = pm.response.json();\r",
+							"// let Status = jsonData.limits[\"54bba24af6196bd5f824e563\"].boards.totalPerMember.status;\r",
+							"// //console.log(Status);  // test if we have right path to the object\r",
+							"// pm.test(\"Status is ok\"), function() {\r",
+							"//     pm.expect(Status).to.be.eql(\"ok\");\r",
+							"// }\r",
+							"// // THE SAME via key Variblae - is better !!!\r",
+							"// let boardCount;\r",
+							"// for (let key in jsonData.limits) {\r",
+							"//     console.log(key, jsonData.limits[key]);   // test the object\r",
+							"//     console.log(jsonData.limits[key].hasOwnProperty(\"boards\"));   // test if the object is correct\r",
+							"//     if (jsonData.limits[key].hasOwnProperty(\"boards\")) {\r",
+							"//         boardCount = jsonData.limits[key].boards.totalPerMember.count;\r",
+							"//     }\r",
+							"// }\r",
+							"// pm.test(\"Count is 1\", function(){\r",
+							"//     pm.expect(boardCount).to.be.eql(1);\r",
+							"// })\r",
+							"\r",
+							"// //== Second test: 2 options\r",
+							"// let Voting = jsonData.prefs.voting;  // via variable\r",
+							"// pm.test(\"Voting is disabled\", function() {\r",
+							"//     pm.expect(Voting).to.be.eql(\"disabled\");\r",
+							"// }) \r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://run.mocky.io/v3/f8e66f89-6197-4cd2-83d6-3b8fca979ad0",
+					"protocol": "https",
+					"host": [
+						"run",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v3",
+						"f8e66f89-6197-4cd2-83d6-3b8fca979ad0"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New TODO list creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"List should be created\", function () {\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"listName\"));\r",
+							"    pm.expect(jsonData.closed).to.eql(false);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"listId\", jsonData.id);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"listName\", getRandomListName());\r",
+							"\r",
+							"function getRandomListName() {\r",
+							"    const listName = \"My list name \" + parseInt(Math.random() * 10000);\r",
+							"    return listName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards/{{boardId}}/lists?key={{trello_key}}&token={{trello_token}}&name={{listName}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						"{{boardId}}",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{listName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New DONE list creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"List should be created\", function () {\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"listDONEName\"));\r",
+							"    pm.expect(jsonData.closed).to.eql(false);\r",
+							"    pm.expect(jsonData.idBoard).to.eql(pm.environment.get(\"boardId\"));\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"listDoneId\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"listDONEName\", getRandomListName());\r",
+							"\r",
+							"function getRandomListName() {\r",
+							"    const listName = \"My list name \" + parseInt(Math.random() * 10000);\r",
+							"    return listName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards/{{boardId}}/lists?key={{trello_key}}&token={{trello_token}}&name={{listDONEName}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						"{{boardId}}",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{listDONEName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New card creation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Card should be created\", function () {\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"cardName\"));\r",
+							"    pm.expect(jsonData.closed).to.eql(false);\r",
+							"    pm.expect(jsonData.idList).to.eql(pm.environment.get(\"listId\"));\r",
+							"    pm.expect(jsonData.idBoard).to.eql(pm.environment.get(\"boardId\"));\r",
+							"    pm.expect(jsonData.badges.votes).to.eql(0);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"cardId\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"cardName\", getRandomCardName());\r",
+							"\r",
+							"function getRandomCardName() {\r",
+							"    const cardName = \"Learn Postman \" + parseInt(Math.random() * 10000);\r",
+							"    return cardName;\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/cards?key={{trello_key}}&token={{trello_token}}&name={{cardName}}&idList={{listId}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{cardName}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{listId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Moving new card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Card should be moved\", function () {\r",
+							"    pm.expect(jsonData.name).to.eql(pm.environment.get(\"cardName\"));\r",
+							"    pm.expect(jsonData.idList).to.eql(pm.environment.get(\"listDoneId\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/cards/{{cardId}}?key={{trello_key}}&token={{trello_token}}&idList={{listDoneId}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						"{{cardId}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{listDoneId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Board should be deleted\", function () {\r",
+							"    pm.expect(jsonData._value).to.eql(null);\r",
+							"});\r",
+							"\r",
+							"// Better to do it in the very last request !!!\r",
+							"pm.environment.unset(\"boardName\");\r",
+							"pm.environment.unset(\"listId\");\r",
+							"pm.environment.unset(\"listName\");\r",
+							"pm.environment.unset(\"listDoneId\");\r",
+							"pm.environment.unset(\"listDONEName\");\r",
+							"pm.environment.unset(\"cardId\");\r",
+							"pm.environment.unset(\"cardName\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/boards/{{boardId}}?key={{trello_key}}&token={{trello_token}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						"{{boardId}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "Copy",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get boards",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The board is deleted\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"The requested resource was not found.\");\r",
+							"});\r",
+							"\r",
+							"pm.environment.unset(\"boardId\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{trello_url}}/1/organizations/{{boardId}}?key={{trello_key}}&token={{trello_token}}",
+					"host": [
+						"{{trello_url}}"
+					],
+					"path": [
+						"1",
+						"organizations",
+						"{{boardId}}"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trello_key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trello_token}}"
+						},
+						{
+							"key": "name",
+							"value": "Copy",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
