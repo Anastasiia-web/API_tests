@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "8bb10370-d320-4922-aebb-b3a29b0ad800",
+		"name": "Parse CSV + Workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9519316"
+	},
+	"item": [
+		{
+			"name": "PapaLibrary Setup",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// https://www.papaparse.com/\r",
+							"// udemy.com/course/postman-the-complete-guide/learn/lecture/9695186#overview\r",
+							"\r",
+							"pm.globals.set(\"PapaLibrary\", responseBody);\r",
+							"\r",
+							"if (pm.globals.get(\"runnedOnce\")== 1) {\r",
+							"    postman.setNextRequest(\"SOLUTION Negative Test\");\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://raw.githubusercontent.com/mholt/PapaParse/master/papaparse.min.js",
+					"protocol": "https",
+					"host": [
+						"raw",
+						"githubusercontent",
+						"com"
+					],
+					"path": [
+						"mholt",
+						"PapaParse",
+						"master",
+						"papaparse.min.js"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SOLUTION",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"eval(pm.globals.get(\"PapaLibrary\"));   // 1. Setup",
+							"var Papa = this.Papa;",
+							"",
+							"const parserConfig = {\t               // 2. Configure Papa",
+							"    header: true",
+							"};",
+							"",
+							"var parsedBody = Papa.parse(responseBody, parserConfig);  // 3. Parse the response body",
+							"console.log(parsedBody);",
+							"",
+							"pm.test(\"ABC1234 was charged properly\", function () {     // 4. Tests",
+							"    for (let invoice of parsedBody.data) {",
+							"        console.log(invoice);",
+							"        if (invoice.ResHash === 'ABC1234') {",
+							"            pm.expect(invoice.InvTotal).to.eql(\"$3,500.00\");",
+							"        }",
+							"    }",
+							"});",
+							"",
+							"pm.globals.unset(\"PapaLibrary\");                          // 5. Clean-up",
+							"",
+							"pm.globals.set(\"runnedOnce\", 1);",
+							"postman.setNextRequest(\"PapaLibrary Setup\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5aaadf55330000b43e2dabab",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5aaadf55330000b43e2dabab"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SOLUTION Negative Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Setup",
+							"eval(pm.globals.get(\"PapaLibrary\"));",
+							"var Papa = this.Papa;",
+							"",
+							"// 2. Configure Papa",
+							"const parserConfig = {\t",
+							"    header: true",
+							"};",
+							"",
+							"// 3. Parse the response body",
+							"var parsedBody = Papa.parse(responseBody, parserConfig);",
+							"console.log(parsedBody);",
+							"",
+							"// 4. Tests",
+							"pm.test(\"ABC1234 was charged properly\", function () {",
+							"    for (let invoice of parsedBody.data) {",
+							"        console.log(invoice);",
+							"        if (invoice.ResHash === 'ABC1234') {",
+							"            pm.expect(invoice.InvTotal).not.to.eql(\"$4,500.00\");",
+							"        }",
+							"    }",
+							"});",
+							"",
+							"// 5. Clean-up",
+							"pm.globals.unset(\"PapaLibrary\");",
+							"pm.globals.unset(\"runnedOnce\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.mocky.io/v2/5aaadf55330000b43e2dabab",
+					"protocol": "http",
+					"host": [
+						"www",
+						"mocky",
+						"io"
+					],
+					"path": [
+						"v2",
+						"5aaadf55330000b43e2dabab"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "foo",
+			"value": "bar",
+			"type": "string"
+		}
+	]
+}
