@@ -13,9 +13,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// pm.test(\"Status code is 200\", function () {\r",
-							"//     pm.response.to.have.status(200);\r",
-							"// });\r",
+							"// pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
 							"// const jsonData = pm.response.json();\r",
 							"// pm.test(\"Board should be created\", function () {\r",
 							"//     pm.expect(jsonData.name).to.eql(pm.environment.get(\"boardName\"));\r",
