@@ -1,0 +1,389 @@
+{
+	"info": {
+		"_postman_id": "556b7109-b15c-4bcf-a963-ddbe810e9e5f",
+		"name": "Github API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9519316"
+	},
+	"item": [
+		{
+			"name": "List user's repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{githubUrl}}/user/repos",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.globals.set(\"reposId\", response.id);\r",
+							"pm.globals.set(\"repoName\", response.name);\r",
+							"pm.globals.set(\"createdAt\", response.created_at);\r",
+							"pm.globals.set(\"owner\", response.owner.login);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Test repository + '{{$randomNoun}}'\",\r\n  \"description\": \"This is a test repository created by Postman\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/user/repos",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve newly created repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Confirming time creation\", function () {\r",
+							"    pm.expect(response.created_at).to.eql(pm.globals.get(\"createdAt\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/repos/{{owner}}/{{repoName}}",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repoName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));\r",
+							"\r",
+							"pm.globals.set(\"issue_number\", pm.response.json().number);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Found a bug\",\r\n    \"body\": \"This issue has been automatically created by Postman.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/repos/{{owner}}/{{repoName}}/issues",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repoName}}",
+						"issues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve created issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Issue was created\", function () {\r",
+							"    pm.expect(response.title).to.eql(\"Found a bug\");\r",
+							"    pm.expect(response.closed_by).to.eql(null);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/repos/{{owner}}/{{repoName}}/issues/{{issue_number}}",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repoName}}",
+						"issues",
+						"{{issue_number}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", () => pm.response.to.have.status(204));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/repos/{{owner}}/{{repoName}}",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repoName}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve deleted repos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", () => pm.response.to.have.status(404));\r",
+							"\r",
+							"pm.globals.unset(\"repoName\");\r",
+							"pm.globals.unset(\"reposId\");\r",
+							"pm.globals.unset(\"owner\");\r",
+							"pm.globals.unset(\"createdAt\");\r",
+							"pm.globals.unset(\"issue_number\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{githubToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{githubUrl}}/repos/{{owner}}/{{repoName}}",
+					"host": [
+						"{{githubUrl}}"
+					],
+					"path": [
+						"repos",
+						"{{owner}}",
+						"{{repoName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
