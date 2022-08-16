@@ -1,0 +1,65 @@
+{
+	"info": {
+		"_postman_id": "0be29ad4-88ff-4a97-bcb7-45c4a7739040",
+		"name": "Parse HTML",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9519316"
+	},
+	"item": [
+		{
+			"name": "example.com",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+							"\r",
+							"var cheerio = require(\"cheerio\");\r",
+							"\r",
+							"const $ = cheerio.load(pm.response.text());\r",
+							"\r",
+							"console.log($(\"h1\").html());  // \"Example Domain\"\r",
+							"console.log($(\"h1\").text());  // \"Example Domain\"\r",
+							"console.log($(\"a\").attr(\"href\"));  // \"https://www.iana.org/domains/example\"\r",
+							"console.log($(\"a\").html());  // \"More information...\"\r",
+							"console.log($(\"a\").text());  // \"More information...\"\r",
+							"console.log($(\"style\").attr(\"type\"));  // \"text/css\"\r",
+							"console.log($(\"meta\").attr(\"charset\")); // \"text/css\"\r",
+							"console.log($(\"head\").html()); // \"text/css\"\r",
+							"//  https://community.postman.com/t/parse-html-form-response-data/2215/5\r",
+							"// Using this HTML markup as an example:\r",
+							"\r",
+							"// <ul id=\"fruits\">\r",
+							"//   <li class=\"apple\">Apple</li>\r",
+							"//   <li class=\"orange\">Orange</li>\r",
+							"//   <li class=\"pear\">Pear</li>\r",
+							"// </ul>\r",
+							"// Selectors\r",
+							"\r",
+							"// $('.apple', '#fruits').text() \r",
+							"// //=> Apple \r",
+							"// $('ul .pear').attr('class') \r",
+							"// //=> pear \r",
+							"// $('li[class=orange]').html() \r",
+							"// //=> Orange"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "example.com",
+					"host": [
+						"example",
+						"com"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
